@@ -11,6 +11,7 @@ const Page: React.FC = () => {
       {/* Hero Section */}
       <section className="w-full flex flex-col md:flex-row items-center justify-between gap-10 p-10 rounded-2xl border-2 border-green-400 transition-all duration-500 hover:shadow-[0_0_20px_4px_rgba(34,197,94,0.4)]">
         <div className="flex flex-col gap-6 max-w-xl text-white">
+          
           <h2 className="text-3xl font-bold leading-tight">
             Ace your Interviews with <br />
             <span className="text-green-400">AI-Powered Practice & Feedback</span>

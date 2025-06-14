@@ -9,29 +9,56 @@ import * as random from 'maath/random/dist/maath-random.esm';
 
 const StarBackground = (props: React.ComponentProps<'group'>) => {
   const ref = useRef<THREE.Group>(null!);
-  const [radius, setRadius] = useState(1.2);
+  const [radius, setRadius] = useState(0.5); // ✅ Start small
   const [sphere, setSphere] = useState<Float32Array>(
-    () => random.inSphere(new Float32Array(5000 * 3), { radius: 1.2 })
+    () => random.inSphere(new Float32Array(5000 * 3), { radius: 0.5 })
   );
 
-  // Track which keys are being pressed
+  const expanding = useRef(false);
   const keysPressed = useRef<{ [key: string]: boolean }>({});
+  const soundRef = useRef<HTMLAudioElement | null>(null);
 
-  // Animate radius change
+  // ✅ Play sound once on mount
+  useEffect(() => {
+    const sound = new Audio('/sounds/expand.mp3');
+    sound.loop = false; // ✅ Play only once
+    sound.volume = 1;
+    soundRef.current = sound;
+
+    sound.play().catch((e) => {
+      console.warn('Audio autoplay blocked by browser:', e);
+    });
+  }, []);
+
+  // ✅ Start expansion after delay
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      expanding.current = true;
+    }, 10); // wait before expanding
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Radius animation logic
   useEffect(() => {
     let frameId: number;
 
     const animate = () => {
-      const qAndUp = keysPressed.current['q'] && keysPressed.current['ArrowUp'];
-      const oneAndDown = keysPressed.current['q'] && keysPressed.current['ArrowDown'];
-
       setRadius(prev => {
         let newRadius = prev;
-        if (qAndUp) {
-          newRadius = Math.min(prev + 0.03, 5);
-        } else if (oneAndDown) {
-          newRadius = Math.max(prev - 0.03, 0.5);
+
+        if (expanding.current) {
+          newRadius = Math.min(prev + 0.01, 2.5);
+          if (newRadius >= 2.5) {
+            expanding.current = false;
+          }
+        } else {
+          const qAndUp = keysPressed.current['q'] && keysPressed.current['ArrowUp'];
+          const oneAndDown = keysPressed.current['q'] && keysPressed.current['ArrowDown'];
+
+          if (qAndUp) newRadius = Math.min(prev + 0.03, 5);
+          if (oneAndDown) newRadius = Math.max(prev - 0.03, 0.5);
         }
+
         return newRadius;
       });
 
@@ -42,32 +69,30 @@ const StarBackground = (props: React.ComponentProps<'group'>) => {
     return () => cancelAnimationFrame(frameId);
   }, []);
 
-  // Regenerate stars on radius change
+  // Update stars when radius changes
   useEffect(() => {
     const newSphere = random.inSphere(new Float32Array(5000 * 3), { radius });
     setSphere(newSphere);
   }, [radius]);
 
-  // Keydown/keyup listeners
+  // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current[e.key] = true;
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       keysPressed.current[e.key] = false;
     };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 
-  // Rotation effect
+  // Rotate stars
   useFrame((_, delta) => {
     if (ref.current) {
       ref.current.rotation.x -= delta / 10;
