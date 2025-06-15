@@ -3,6 +3,7 @@ import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 import Shader from "@/components/Shader";
 import { Toaster } from "sonner";
+// import BackAudio from "@/components/BackAudio";
 
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
@@ -22,10 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
+    
     <html lang="en" className = "dark">
       <body
         className={`${monaSans.className} antialiased `}
       >
+        {/* <BackAudio/> */}
+
+     
         <Shader />
 
         {children}

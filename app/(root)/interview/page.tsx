@@ -1,10 +1,13 @@
+import Agent from "@/components/Agent";
+
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      
-    </div>
+   <>
+   <h3>Interview Generator</h3>
+   <Agent userName="You" userId="user1" type="generate"/>
+   </>
   )
 }
 

@@ -16,19 +16,27 @@ const StarBackground = (props: React.ComponentProps<'group'>) => {
 
   const expanding = useRef(false);
   const keysPressed = useRef<{ [key: string]: boolean }>({});
-  const soundRef = useRef<HTMLAudioElement | null>(null);
+  // const soundRef = useRef<HTMLAudioElement | null>(null);
 
   // ✅ Play sound once on mount
-  useEffect(() => {
-    const sound = new Audio('/sounds/expand.mp3');
-    sound.loop = false; // ✅ Play only once
-    sound.volume = 1;
-    soundRef.current = sound;
+//  
+// useEffect(() => {
+// setTimeout(() => {
+// const sound = new Audio('/sounds/expand.mp3');
+//     sound.addEventListener("canplaythrough", () => {
+//       console.log('Audio is ready to play');
+//   /* the audio is now playable; play it if permissions allow */
+//   sound.play();
+// });
+//     sound.loop = false; // ✅ Play only once
+//     sound.volume = 1;
+//     soundRef.current = sound;
 
-    sound.play().catch((e) => {
-      console.warn('Audio autoplay blocked by browser:', e);
-    });
-  }, []);
+//     sound.play().catch((e) => {
+//       console.warn('Audio not working', e);
+//     });
+// }, 0)
+//   }, []);
 
   // ✅ Start expansion after delay
   useEffect(() => {
@@ -47,7 +55,7 @@ const StarBackground = (props: React.ComponentProps<'group'>) => {
         let newRadius = prev;
 
         if (expanding.current) {
-          newRadius = Math.min(prev + 0.01, 2.5);
+          newRadius = Math.min(prev + 0.065, 2.5);
           if (newRadius >= 2.5) {
             expanding.current = false;
           }
@@ -101,7 +109,9 @@ const StarBackground = (props: React.ComponentProps<'group'>) => {
   });
 
   return (
-    <group ref={ref} rotation={[0, 0, Math.PI / 4]} {...props}>
+    <>
+     {/* <audio autoPlay controls src="/sounds/expand.mp3"></audio> */}
+     <group ref={ref} rotation={[0, 0, Math.PI / 4]} {...props}>
       <Points positions={sphere} stride={3} frustumCulled>
         <PointMaterial
           transparent
@@ -112,6 +122,9 @@ const StarBackground = (props: React.ComponentProps<'group'>) => {
         />
       </Points>
     </group>
+    </>
+    
+    
   );
 };
 

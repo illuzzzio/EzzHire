@@ -7,6 +7,7 @@ import InterviewCard from "@/components/InterviewCard";
 
 const Page: React.FC = () => {
   return (
+    
     <>
       {/* Hero Section */}
       <section className="w-full flex flex-col md:flex-row items-center justify-between gap-10 p-10 rounded-2xl border-2 border-green-400 transition-all duration-500 hover:shadow-[0_0_20px_4px_rgba(34,197,94,0.4)]">
