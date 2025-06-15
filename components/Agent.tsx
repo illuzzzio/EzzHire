@@ -15,7 +15,7 @@ type AgentProps = {
 const Agent = ({ userName }: AgentProps) => {
   const isSpeaking = true;
   const callStatus = CallStatus.ACTIVE;
-  const messages = ["Whats your name?", "My name is Nefron , Nice to meet you!"];
+  const messages = ["Whats your name?", "My name is Freezy , Nice to meet you!"];
   const lastMessage = messages[messages.length - 1];
 
   return (
